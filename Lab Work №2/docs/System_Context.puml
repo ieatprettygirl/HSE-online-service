@@ -1,0 +1,25 @@
+@startuml context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(teenager, "Подросток", "Соискатель вакансий") 
+Person(company, "Компания", "Работодатель") 
+Person(admin, "Администратор", "Управляет системой") 
+
+System(system, "Система подбора вакансий", "Помогает подросткам находить подработку") 
+
+System_Ext(data_analysis_system, "Система рекомендаций", "Анализирует вакансии и предпочтения пользователей") 
+System_Ext(system_education, "Система обучения и предоставления работы", "Обучение профессии и практическое применение")
+System_Ext(system_info, "Система уведомлений", "Отправляет уведомления пользователям")
+' System_Ext(system_reg, "Система подтверждения регистрации", "Подтверждение регистрации через почту")
+
+Rel(teenager, system, "Занимается поиском подработки и подает заявки") 
+Rel(company, system, "Размещает вакансии") 
+Rel(admin, system, "Редактирует компании и объявления") 
+
+Rel(system, data_analysis_system, "Отправляет данные для анализа") 
+Rel(system, system_education, "Направляет соискателя") 
+Rel(system, system_info, "Передаёт информацию об откликах")
+' Rel(system, system_reg, "Просит зарегестрироваться пользователю")
+
+' SHOW_LEGEND()
+@enduml

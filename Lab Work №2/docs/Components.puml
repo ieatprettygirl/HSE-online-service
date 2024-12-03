@@ -1,0 +1,35 @@
+@startuml component
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+' LAYOUT_WITH_LEGEND()
+Component(balancer, "Балансировщий соеденений", "Nginx", "Балансирует нагрузку в системе")
+Container(api, "Веб-приложение", "NextJS + TypeScrip", "Помогает подростам найти подходящие вакансии") 
+System_Boundary(system, "Контейнер") {
+    Component(CompanyRep, "CompanyRep", "Component: java class", "Класс для получения компаний")
+    Component(VacancyRep, "VacancyRep", "Component: java class", "Класс для получения вакансий")
+    Component(FilterRep, "FilterRep", "Component: java class", "Класс для фильтрации вакансий")
+    Component(ReviewRep, "ReviewRep", "Component: java class", "Класс для получения отзывов")
+    Component(ResponseRep, "ResponseRep", "Component: java class", "Класс для получения откликов")
+}
+System_Ext(data_analysis_system, "Система рекомендаций", "Анализирует вакансии и предпочтения пользователей")
+System_Ext(job_training_system, "Система вакансий и проф. обучения", "Предоставляет информацию о вакансиях и обучении")
+System_Ext(notifications, "Уведомления", "Отправляет уведомления пользователям")
+ContainerDb(db, "База данных", "PostgreSQL", "Хранилище данных")
+Rel(balancer, ResponseRep, "")
+Rel(api, balancer, "HTTP-запросы сервера")
+Rel(balancer, ReviewRep, "")
+Rel(balancer, VacancyRep, "")
+Rel(balancer, CompanyRep, "")
+Rel(VacancyRep, db, "Чтение из БД")
+' Rel(CompanyRep, db, "Чтение и запись в БД")
+' Rel(ReviewRep, db, "Чтение и запись БД")
+
+FilterRep <--> VacancyRep
+CompanyRep <--> db: "Чтение и запись в БД"
+ReviewRep <--> db: "Чтение и запись в БД"
+ResponseRep <--> db: "Чтение и запись в БД"
+
+Rel(ResponseRep, notifications, "Запрос на анализ")
+Rel(VacancyRep, data_analysis_system, "Запрос на анализ")
+Rel(VacancyRep, job_training_system, "Запрос на уведомление")
+
+@enduml

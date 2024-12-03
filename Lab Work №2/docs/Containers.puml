@@ -1,0 +1,48 @@
+@startuml container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' LAYOUT_WITH_LEGEND()
+
+Person(user, "Подросток", "Соискатель вакансий") 
+Person(company, "Компания", "Работодатель") 
+Person(admin, "Администратор", "Управляет системой") 
+
+System_Boundary(system, "Система подбора вакансий") {
+    Container(ui, "Frontend", "React.js + TailwindCSS", "Интерфейс для взаимодействия с пользователями")
+    Container(balancer, "Балансировщий соеденений", "Nginx", "Балансирует нагрузку в системе")
+    Container(api_auth, "Сервис авторизации", "Node.js")
+    Container(api, "Backend (API-сервер)", "Next.js (Server Actions)", "Обрабатывает запросы от UI и выполняет логику приложения")
+    Container(api_reg, "Сервис регистрации компаний", "Node.js")
+    Container(auth, "Аутентификация", "NextAuth", "Управляет аутентификацией пользователей")
+    ContainerDb(db, "База данных", "PostgreSQL", "Хранилище данных")
+}
+
+System_Ext(data_analysis_system, "Система рекомендаций", "Анализирует вакансии и предпочтения пользователей")
+System_Ext(job_training_system, "Система вакансий и проф. обучения", "Предоставляет информацию о вакансиях и обучении")
+System_Ext(notifications, "Уведомления", "Отправляет уведомления пользователям")
+' System_Ext(system_reg, "Система подтверждения регистрации", "Подтверждение регистрации через почту")
+
+Rel(user, ui, "Использует приложение для поиска вакансий")
+Rel(company, ui, "Размещает вакансии")
+Rel(admin, ui, "Редактирует компании и объявления")
+' Rel(ui, api, "HTTP-запрос")
+' Rel(api, ui, "Возвращает ответы на клиентскую часть")
+' api <--> balancer : "HTTP-запрос и ответ от сервера"
+
+Rel(ui, balancer, "Перенаправляет запросы")
+
+Rel(balancer, api, "HTTP-запрос и ответ от сервера")
+Rel(balancer, api_auth, "HTTP-запрос на авторизация\регистрацию пользователя")
+Rel(balancer, api_reg, "HTTP-запрос на регистрацию компании")
+Rel(api_reg, db, "Добавление записи в БД")
+' Rel(api, db, "Запросы к базе данных")
+' Rel(db, api, "Возвращает ответы на сервер")
+api <--> db : "Чтение и запись в БД"
+api_auth <--> db : "Чтение и запись в БД"
+Rel(api, auth, "Проверка учетных данных")
+' Rel(auth, api, "Ответ с результатом аутентификации")
+Rel(api, notifications, "Отправка уведомлений")
+Rel(api, data_analysis_system, "Запрос на анализ данных")
+Rel(api, job_training_system, "Запрос информации о вакансиях и обучении")
+' Rel(api_auth, system_reg, "Запрос на подтверждение регистрации")
+
+@enduml
