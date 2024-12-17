@@ -1,0 +1,61 @@
+@startuml
+
+class User {
+    +String id
+    +String name
+    +String email
+    +Role role
+    +void register()
+    +void login()
+}
+
+class Role {
+    +String id
+    +String name
+}
+
+class Job {
+    +String id
+    +String title
+    +String description
+    +Company company
+    +void postJob()
+}
+
+class Application {
+    +String id
+    +User  applicant
+    +Job job
+    +Date dateApplied
+    +void submit()
+}
+
+class Company {
+    +String id
+    +String name
+    +String location
+    +List<Job> jobs
+    +void createJob()
+}
+
+class UserResponse {
+    +String id
+    +User  user
+    +String feedback
+    +void respond()
+}
+
+class CompanyResponse {
+    +String id
+    +Company company
+    +String feedback
+    +void respond()
+}
+
+User  "1" -- "0..*" Application : applies >
+Job "1" -- "0..*" Application : receives >
+Company "1" -- "0..*" Job : posts >
+User  "1" -- "0..*" UserResponse : gives >
+Company "1" -- "0..*" CompanyResponse : gives >
+Role "1" -- "0..*" User : assigned >
+@enduml

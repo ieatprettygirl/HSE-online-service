@@ -1,0 +1,19 @@
+@startuml
+
+actor User
+participant "Api Gateway" as AG
+participant "Response Controller" as RC
+participant "Response Repository" as RR
+participant "Notification Service" as NS
+participant "Database" as DB
+
+User  -> AG: HTTP-запрос
+AG -> RC: Передать запрос
+RC -> RR: Получить отклик
+RR -> DB: Запрос данных
+DB --> RR: Данные отклика
+RR --> RC: Отклик
+RC -> NS: Уведомить о новом отклике
+NS --> AG: Уведомление отправлено
+AG --> User: Ответ сервера
+@enduml
