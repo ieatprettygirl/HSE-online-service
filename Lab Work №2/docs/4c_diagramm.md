@@ -10,3 +10,4 @@
 ![alt text](pictures/Components.png)
 
 ## Диаграмма компонентов (сервис вакансий)
+![alt text](pictures/Components2.png)
